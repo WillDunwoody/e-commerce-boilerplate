@@ -1,9 +1,57 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Admin::ProductsController', type: :request do
+	describe 'As non admin' do
+		let(:non_admin) { create(:user, admin: false) }
+		let(:token) { Warden::JWTAuth::UserEncoder.new.call(non_admin, :user, nil) }
+		let(:auth_headers) { { 'Authorization' => "Bearer #{token.first}" } }
+
+		describe 'POST /api/v1/admin/products' do
+			let(:product_params) { { product: { name: 'New Phone', price: 500, description: 'Lorem ipsum' } } }
+
+			it 'does not allow creating a product' do
+				expect {
+					post '/api/v1/admin/products', params: product_params, headers: auth_headers
+				}.not_to change(Product, :count)
+
+
+				expect(response).to have_http_status(:forbidden)
+			end
+		end
+
+		describe 'GET /api/v1/admin/products/:id' do
+			let!(:product) { create(:product) }
+
+			it 'does not allow viewing a product' do
+				get "/api/v1/admin/products/#{product.id}", headers: auth_headers
+				expect(response).to have_http_status(:forbidden)
+			end
+		end
+
+		describe 'PUT /api/v1/admin/products/:id' do
+			let!(:product) { create(:product) }
+			let(:product_params) { { product: { name: "Updated Phone" } } }
+
+			it 'does not allow updating a product' do
+				put "/api/v1/admin/products/#{product.id}", params: { product: product_params }, headers: auth_headers
+				expect(response).to have_http_status(:forbidden)
+			end
+		end
+
+		describe 'DELETE /api/v1/admin/products/:id' do
+			let!(:product) { create(:product) }
+
+			it 'does not allow deleting a product' do
+				expect {
+					delete "/api/v1/admin/products/#{product.id}", headers: auth_headers
+				}.not_to change(Product, :count)
+				expect(response).to have_http_status(:forbidden)
+			end
+		end
+	end
 
 	describe 'As admin' do
-		let(:admin) { create(:user, admin: false) }  # Assuming you have some way to authenticate
+		let(:admin) { create(:user, admin: true) }
 		let(:token) { Warden::JWTAuth::UserEncoder.new.call(admin, :user, nil) }
 		let(:auth_headers) { { 'Authorization' => "Bearer #{token.first}" } }
 
