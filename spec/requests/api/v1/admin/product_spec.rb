@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Admin::ProductsController', type: :request do
 	describe 'As non admin' do
-		let(:non_admin) { create(:user, admin: false) }  # Assuming you have some way to authenticate
+		let(:non_admin) { create(:user, admin: false) }
 		let(:token) { Warden::JWTAuth::UserEncoder.new.call(non_admin, :user, nil) }
 		let(:auth_headers) { { 'Authorization' => "Bearer #{token.first}" } }
 
@@ -51,7 +51,7 @@ RSpec.describe 'Api::V1::Admin::ProductsController', type: :request do
 	end
 
 	describe 'As admin' do
-		let(:admin) { create(:user, admin: true) }  # Assuming you have some way to authenticate
+		let(:admin) { create(:user, admin: true) }
 		let(:token) { Warden::JWTAuth::UserEncoder.new.call(admin, :user, nil) }
 		let(:auth_headers) { { 'Authorization' => "Bearer #{token.first}" } }
 
