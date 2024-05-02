@@ -1,9 +1,11 @@
 class Api::V1::Admin::ProductsController < ApplicationController
 	before_action :authenticate_user!
 	before_action :set_product, only: [:show, :update, :destroy]
+	before_action :authorize_product, only: [:show, :update, :destroy]
 
 	def create
 		product = Product.new(create_product_params)
+		authorize product
 
 		if product.save
 			render json: product, status: :created
@@ -33,6 +35,10 @@ class Api::V1::Admin::ProductsController < ApplicationController
 
 	def set_product
 		@product = Product.find(params[:id])
+	end
+
+	def authorize_product
+		authorize @product
 	end
 
 	def create_product_params

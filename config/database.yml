@@ -5,17 +5,17 @@ default: &default
 
 development:
   <<: *default
-  database: dannys_shop_development
+  database: e_commerce_development
   url: <%= ENV['DEVELOPMENT_DB_URL'] %>
 
 test:
   <<: *default
-  database: dannys_shop_test
+  database: e_commerce_test
   url: <%= ENV['TEST_DB_URL'] %>
 
 production:
   <<: *default
-  database: dannys_shop_production
+  database: e_commerce_production
   url: <%= ENV['PRODUCTION_DB_URL'] %>
-  username: api
-  password: <%= ENV["API_DATABASE_PASSWORD"] %>
+  username: e-commerce-api
+  password: <%= ENV["E_COMMERCE_API_DATABASE_PASSWORD"] %>
