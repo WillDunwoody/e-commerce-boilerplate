@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: dannys_shop_development
+  url: <%= ENV['DEVELOPMENT_DB_URL'] %>
+
+test:
+  <<: *default
+  database: dannys_shop_test
+  url: <%= ENV['TEST_DB_URL'] %>
+
+production:
+  <<: *default
+  database: dannys_shop_production
+  url: <%= ENV['PRODUCTION_DB_URL'] %>
+  username: api
+  password: <%= ENV["API_DATABASE_PASSWORD"] %>
